@@ -7,6 +7,10 @@ import threading
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static'
 
+if not os.path.exists('static'):
+    os.makedirs('static')
+
+
 def load_cipher_key(filename='cipher.key'):
     """Load the cipher key from a file."""
     with open(filename, 'rb') as key_file:
@@ -14,6 +18,8 @@ def load_cipher_key(filename='cipher.key'):
 
 key = load_cipher_key()
 cipher = Fernet(key)
+
+
 
 def delete_file_later(file_path, delay=5):
     """Delete a file after a specified delay in seconds."""
