@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Decryption</title>
+</head>
+<body>
+    <h1>Decrypt an Image</h1>
+    <form id="decryption-form" method="post" enctype="multipart/form-data">
+        <input type="file" name="encrypted_file" required>
+        <button type="submit">Decrypt</button>
+    </form>
+    <p id="message"></p>
+    <a href="{{ url_for('encryption') }}">Go to Encryption</a>
+
+    <script>
+        document.getElementById('decryption-form').onsubmit = async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            
+            const response = await fetch('/decryption', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.file_url) {
+                // Automatically download the file
+                const link = document.createElement('a');
+                link.href = result.file_url;
+                link.download = 'decrypted.png';
+                link.click();
+
+                document.getElementById('message').textContent = 'File decrypted and downloaded successfully!';
+            } else {
+                document.getElementById('message').textContent = 'Decryption failed.';
+            }
+        };
+    </script>
+</body>
+</html>
